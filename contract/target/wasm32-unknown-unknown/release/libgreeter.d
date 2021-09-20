@@ -1,0 +1,1 @@
+/Users/doriankinoocrutcher/Documents/blockheads/Blockstagram/blockstagram/contract/target/wasm32-unknown-unknown/release/libgreeter.rlib: /Users/doriankinoocrutcher/Documents/blockheads/Blockstagram/blockstagram/contract/src/lib.rs

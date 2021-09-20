@@ -1,0 +1,1 @@
+/Users/doriankinoocrutcher/Documents/blockheads/Blockstagram/blockstagram/contract/target/debug/libgreeter.dylib: /Users/doriankinoocrutcher/Documents/blockheads/Blockstagram/blockstagram/contract/src/lib.rs
