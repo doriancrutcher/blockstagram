@@ -85,6 +85,10 @@ impl Blockstagram {
         }
     }
 
+    pub fn delete_address_list(&mut self, account_id: String) {
+        self.locationAddress.remove(&account_id);
+    }
+
     pub fn get_data_addresses(self, account_id: String) -> Vec<String> {
         match self.locationAddress.get(&account_id) {
             Some(address) => address,

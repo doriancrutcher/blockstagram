@@ -13,6 +13,7 @@ const ipfs = create({
 const UploadCenter = (props) => {
   // states
   const [bufferVal, changeBuffer] = useState([]);
+  const [buttonBool, changeButtonBool] = useState(false);
 
   // page references
 
@@ -35,32 +36,45 @@ const UploadCenter = (props) => {
   };
 
   const sendToIPFS = async (event) => {
+    changeButtonBool(true);
+
+    if (captionRef.current.value === "") {
+      alert("please add a caption");
+    }
+
     event.preventDefault();
     console.log("submitting the form...");
 
     const getAddress = await ipfs.add(bufferVal);
+    console.log(getAddress);
 
     // add address
-    await window.contract.add_data_addresses({
+
+    await window.contract.add_data_address({
       account_id: window.accountId,
-      address: getAddress,
+      address: getAddress.path,
     });
+
+    console.log("data address added");
+
+    console.log("caption is", captionRef.current.value);
 
     // store caption
     await window.contract.store_caption({
-      address: getAddress,
+      address: getAddress.path,
       caption: captionRef.current.value,
     });
 
     // update user list if needed
 
     let current_list = await window.contract.get_user_list();
-
-    if (current_list.includes(window.accountId)) {
-      await window.contract.get_user_list({ user: window.accountId });
+    console.log(current_list);
+    if (!current_list.includes(window.accountId)) {
+      await window.contract.store_user({ user: window.accountId });
     }
 
     console.log("form submitted");
+    alert("form submitted");
   };
 
   return (
@@ -75,7 +89,11 @@ const UploadCenter = (props) => {
           ref={captionRef}
         />
 
-        <Form.Control type='submit' onClick={sendToIPFS} />
+        <Form.Control
+          disabled={buttonBool}
+          type='submit'
+          onClick={sendToIPFS}
+        />
       </Form.Group>
     </Container>
   );

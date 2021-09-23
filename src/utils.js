@@ -38,15 +38,15 @@ export async function initContract() {
       changeMethods: [
         "set_greeting",
         "hi",
-        "add_data_addresses",
+        "add_data_address",
         "store_caption",
         "store_user",
+        "add_address",
+        "delete_address_list",
       ],
     }
   );
 }
-
-store_user;
 
 export function logout() {
   window.walletConnection.signOut();

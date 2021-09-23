@@ -21,6 +21,7 @@ import logo from "./assets/Logo.svg";
 import getConfig from "./config";
 import UploadCenter from "./Components/UploadCenter";
 import BlockFeed from "./Components/BlockFeed";
+import UserProfile from "./Components/UserProfile";
 const { networkId } = getConfig(process.env.NODE_ENV || "development");
 
 export default function App() {
@@ -64,7 +65,7 @@ export default function App() {
               <UploadCenter />
             </Route>
             <Route path='/profile' exact>
-              User Profile
+              <UserProfile />
             </Route>
           </Switch>
         </Row>

@@ -1,57 +1,72 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { Container } from "react-bootstrap";
+import { Card, Container, Row, Button } from "react-bootstrap";
 
-const UserProfile = (props) => {
-  // State Variables
-  const [userPictures, changeUserPicures] = useState([]);
-  const [userCaptions, changeUserCaptions] = useState([]);
+const BlockFeed = (props) => {
+  // state variables
+
+  const [userList, changeUserList] = useState([]);
+  const [imageList, changeImageList] = useState([]);
+  const [captionList, changeCaption] = useState([]);
 
   useEffect(() => {
-    const getInfo = async () => {
-      let pictureAddresses = await window.contract.get_data_addresses({
-        account_id: window.account_id,
+    const getFeed = async () => {
+      // get user list
+      let userList = await window.contract.get_user_list();
+      console.log(userList);
+
+      //caption list
+
+      // get image list
+
+      let userAddressStringList = await window.contract.get_data_addresses({
+        account_id: window.accountId,
       });
 
-      let userCaptions = pictureAddresses.map((address, index) => {
-        return await get_caption({ address: address });
+      console.log(userAddressStringList);
+
+      let captionList = userAddressStringList.map(async (x) => {
+        return window.contract.get_caption({ address: x });
       });
 
-      changeUserPicures(pictureAddresses);
-      changeUserCaptions(userCaptions);
+      console.log("captions are", await Promise.all(captionList));
+
+      changeCaption(await Promise.all(captionList));
+
+      await changeImageList(userAddressStringList);
     };
 
-    getInfo();
+    getFeed();
   }, []);
 
+  const imageCaption = ["when hope is all you have, keep hoping #keepHoping"];
+
   return (
-    <Container>
-      {userPictures.map((x, i) => {
-        return (
-          <Row
-            key={i}
-            style={{ marginTop: "10px" }}
-            className='justify-content-center d-flex'
-          >
-            <Card style={{ marginTop: "10px", width: "18rem" }}>
-              <Card.Img
-                style={{ marginTop: "10px" }}
-                variant='top'
-                src={`https://ipfs.infura.io/ipfs/${x}`}
-              />
-              <Card.Body>
-                <Card.Title>{window.accountId}'s Image</Card.Title>
-                <Card.Text>{userCaptions[i]}</Card.Text>
-                <Button variant='primary'>Go somewhere</Button>
-              </Card.Body>
-            </Card>
-          </Row>
-        );
-      })}
+    <Container style={{ marginTop: "10px" }}>
+      <Row className='d-flex justify-content-center'>
+        {imageList.map((x, i) => {
+          return (
+            <React.Fragment key={i}>
+              <Card style={{ marginTop: "10px", width: "18rem" }}>
+                {console.log(x)}
+                <Card.Img
+                  style={{ marginTop: "10px" }}
+                  variant='top'
+                  src={`https://ipfs.infura.io/ipfs/${x}`}
+                />
+                <Card.Body>
+                  <Card.Text>{captionList[i]}</Card.Text>
+                  <Button variant='primary'>Go somewhere</Button>
+                </Card.Body>
+              </Card>
+            </React.Fragment>
+          );
+        })}
+      </Row>
     </Container>
   );
 };
 
-UserProfile.propTypes = {};
+BlockFeed.propTypes = {};
 
-export default UserProfile;
+export default BlockFeed;
